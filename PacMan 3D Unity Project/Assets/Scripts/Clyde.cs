@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class Clyde : Ghost
 {
-	// Start is called before the first frame update
-	void Start()
-	{
+    public static Clyde Instance { get; private set; }
 
-	}
+    public override void Awake()
+    {
+        Instance = this;
+        base.Awake();
+    }
 
-	// Update is called once per frame
-	void Update()
-	{
-
-	}
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
 }

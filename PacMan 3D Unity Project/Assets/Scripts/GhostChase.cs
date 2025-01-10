@@ -18,6 +18,7 @@ public class GhostChase : MoveToTarget
 	{
 		base.Enable(duration);
 		ghost.target = Pacman.Instance.transform;
+		//updateBehaviour = true;
 	}
 
 	private void OnEnable()

@@ -16,11 +16,16 @@ public class GameManager : BaseGameManager
     [SerializeField] private Text gameOverText;
     [SerializeField] private Text scoreText;
     [SerializeField] private Text livesText;
+    [SerializeField] private Map map;
 
     public int score { get; private set; } = 0;
     public int lives { get; private set; } = 3;
 
     private int ghostMultiplier = 1;
+
+    private bool newgame = true;
+
+    public CentralHome centralHome;
 
     private void Awake()
     {
@@ -33,6 +38,7 @@ public class GameManager : BaseGameManager
         }*/
 
         Instance = this;
+        centralHome = new CentralHome();
     }
 
     public override void Loading()
@@ -101,6 +107,7 @@ public class GameManager : BaseGameManager
 		if (lives <= 0 && Input.anyKeyDown)
 		{
 		    SetTargetState(Game.State.restartingGame);
+            map.Initialize(false);
 		    //NewGame();
 		}
 	}
@@ -112,14 +119,14 @@ public class GameManager : BaseGameManager
 
     public void NewGame()
     {
-        //SetScore(0);
-        //SetLives(3);
+        SetScore(0);
+        SetLives(3);
         NewRound();
     }
 
     private void NewRound()
     {
-        //gameOverText.enabled = false;
+        gameOverText.enabled = false;
 
         foreach (Transform pellet in pellets) {
             pellet.gameObject.SetActive(true);
@@ -130,9 +137,9 @@ public class GameManager : BaseGameManager
 
     private void ResetState()
     {
-        //for (int i = 0; i < ghosts.Length; i++) {
-            //ghosts[i].ResetState();
-        //}
+        for (int i = 0; i < ghosts.Length; i++) {
+            ghosts[i].ResetState();
+        }
 
         pacman.ResetState();
     }
@@ -141,11 +148,12 @@ public class GameManager : BaseGameManager
     {
         gameOverText.enabled = true;
 
-        //for (int i = 0; i < ghosts.Length; i++) {
-            //ghosts[i].gameObject.SetActive(false);
-        //}
+        for (int i = 0; i < ghosts.Length; i++) {
+            ghosts[i].gameObject.SetActive(false);
+        }
 
         pacman.gameObject.SetActive(false);
+
     }
 
     private void SetLives(int lives)
@@ -167,11 +175,13 @@ public class GameManager : BaseGameManager
         SetLives(lives - 1);
 
         if (lives > 0) {
+         
             Invoke(nameof(ResetState), 3f);
         } else {
 
-			SetTargetState(Game.State.gameEnding);
-			//GameOver();
+			//SetTargetState(Game.State.gameEnding);
+            //newgame = true;
+			GameOver();
         }
     }
 
@@ -198,19 +208,21 @@ public class GameManager : BaseGameManager
     {
         pellet.gameObject.SetActive(false);
 
-        //SetScore(score + pellet.points);
+        SetScore(score + pellet.points);
 
         if (!HasRemainingPellets())
         {
             pacman.gameObject.SetActive(false);
-            //Invoke(nameof(NewRound), 3f);
+            Invoke(nameof(NewRound), 3f);
         }
     }
 
     public void PowerPelletEaten(PowerPellet pellet)
     {
         for (int i = 0; i < ghosts.Length; i++) {
-            ghosts[i].frightened.Enable(pellet.duration);
+
+            if(!ghosts[i].eaten.enabled)
+                ghosts[i].frightened.Enable(pellet.duration);
         }
 
         PelletEaten(pellet);

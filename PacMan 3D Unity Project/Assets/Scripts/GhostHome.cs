@@ -13,6 +13,13 @@ public class GhostHome : GhostBehavior
 	private void OnEnable()
 	{
 		StopAllCoroutines();
+		ghost.ghostCollider.isTrigger = false;
+		if(ghost.movement.enabled == false)
+		{
+			ghost.movement.enabled = true;
+			homeGate.gameObject.SetActive(true);
+		}
+
 	}
 
 	private void OnDisable()
@@ -77,6 +84,9 @@ public class GhostHome : GhostBehavior
 
 		//Reactivate the home gate
 		homeGate.gameObject.SetActive(true);
+
+		//Activate the ghost scatter behaviour
+		ghost.scatter.Enable();
 	}
 
 }

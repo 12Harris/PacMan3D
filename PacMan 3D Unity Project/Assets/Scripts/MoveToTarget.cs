@@ -43,6 +43,8 @@ public class MoveToTarget : GhostBehavior
 		Transform intermediateTarget;
 
 		//first calculate intermediate target tile
+
+		//if the destination position is not within the map then the target is pacman
 		if ((Pacman.Instance.transform.position.x - Pacman.Instance.twoTilesAway.position.x < -12.5f)
 			|| (Pacman.Instance.transform.position.x + Pacman.Instance.twoTilesAway.position.x > 12.5f)
 			|| (Pacman.Instance.transform.position.z - Pacman.Instance.twoTilesAway.position.z < -13f)
@@ -52,6 +54,7 @@ public class MoveToTarget : GhostBehavior
 			intermediateTarget = Pacman.Instance.transform;
 		}
 
+		//otherwise calculate it
 		else
 		{
 			UnityEngine.Debug.Log("Inky => Target = Pm 2 tiles away");
@@ -66,6 +69,16 @@ public class MoveToTarget : GhostBehavior
 		Inky.Instance.InkyTarget.position = intermediateTarget.position + v;
 
 		ghost.target = Inky.Instance.InkyTarget;
+	}
+
+	private void calculateClydeTarget()
+	{
+		if(Vector3.Distance(ghost.transform.position, Pacman.Instance.transform.position) >= 8f)
+			ghost.target = Pacman.Instance.transform;
+
+		if(Vector3.Distance(ghost.transform.position, Pacman.Instance.transform.position) < 8f)
+			ghost.target = ghost.scatter.homePosition;
+
 	}
 
 	public virtual void Update()
@@ -96,6 +109,11 @@ public class MoveToTarget : GhostBehavior
 					else if (ghost is Inky)
 					{
 						calculateInkyTarget();
+					}
+
+					else if(ghost is Clyde)
+					{
+						calculateClydeTarget();
 					}
 
 				}

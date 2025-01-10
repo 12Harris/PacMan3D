@@ -19,6 +19,9 @@ public class Map : MonoBehaviour
 	[SerializeField]
 	private GameObject nodePrefab;
 
+	[SerializeField]
+	private GameObject pelletPrefab;
+
 	public int nodeCount = 0;
 
 	public static Map Instance;
@@ -32,7 +35,7 @@ public class Map : MonoBehaviour
 	private void Start()
     {
 		InitVectorMap();
-		buildGhostNodes();
+		Initialize();
 		UnityEngine.Debug.Log("Node Count = " + nodeCount);
     }
 
@@ -55,7 +58,7 @@ public class Map : MonoBehaviour
         
     }
 
-	private void buildGhostNodes()
+	public void Initialize(bool firstInit = true)
 	{
 		RaycastHit hit;
 
@@ -66,7 +69,12 @@ public class Map : MonoBehaviour
 				if (isLocationWalkable(map[y, x]))
 				{
 					UnityEngine.Debug.DrawRay(map[y, x] + Vector3.up * 10, -Vector3.up * 15, Color.red, 5f);
-					tryBuildGhostNode(new Vector3(map[y, x].x,1, map[y, x].z));
+
+					if(firstInit)
+						tryBuildGhostNode(new Vector3(map[y, x].x,1, map[y, x].z));
+
+					instantiatePellet(new Vector3(map[y, x].x,.3f, map[y, x].z));
+					
 				}
 			}
 		}
@@ -110,6 +118,11 @@ public class Map : MonoBehaviour
 			nodeCount++;
 		}
 
+	}
+
+	private void instantiatePellet(Vector3 location)
+	{
+		GameObject pellet = Instantiate(pelletPrefab, location, Quaternion.identity);
 	}
 
 }

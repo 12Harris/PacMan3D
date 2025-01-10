@@ -49,9 +49,11 @@ public class Movement : MonoBehaviour
     public void ResetState()
     {
         speedMultiplier = 1f;
-        direction = initialDirection;
+        //direction = initialDirection;
+        direction = Vector3.zero;
         nextDirection = Vector3.zero;
         transform.position = startingPosition;
+        transform.forward = initialDirection;
         rb.isKinematic = false;
         enabled = true;
     }
@@ -83,6 +85,11 @@ public class Movement : MonoBehaviour
 			//exitLocation = Vector3.zero;
 		}
 
+        else
+        {
+            UnityEngine.Debug.Log("next direction is v zero!");
+        }
+
         _reachedExitLocation = reachedExitLocation();
 
 		finalPos = getFinalPos();
@@ -100,6 +107,29 @@ public class Movement : MonoBehaviour
 
 		UnityEngine.Debug.Log("Direction = " + direction);
 
+        CorrectMovement();
+
+	}
+
+    private void CorrectMovement()
+	{
+		var posX = transform.position.x;
+		var posZ = transform.position.z;
+
+		if (Mathf.Abs(direction.z) > 0.1f)
+		{
+			var posXInt = (int)posX;
+
+			if (posX > posXInt)
+				posX = posXInt + 0.5f;
+			else
+				posX = posXInt - 0.5f;
+		}
+		else
+		{
+			posZ = Mathf.Round(posZ);
+		}
+		transform.position = new Vector3(posX, transform.position.y, posZ);
 	}
 
     private void FixedUpdate()
@@ -113,6 +143,13 @@ public class Movement : MonoBehaviour
 
     public void SetDirection(Vector3 direction, bool forced = false)
     {
+        if(direction == Vector3.zero)
+        {
+            //this.direction = Vector3.zero;
+            //nextDirection = Vector3.zero;
+            //return;
+        }
+
         if (calculateExitLocation && exitLocation == Vector3.zero)
         {
 			exitDirection = direction;

@@ -26,6 +26,8 @@ public class Ghost : MonoBehaviour
 	public Transform target;
 	public int points = 200;
 
+	public BoxCollider ghostCollider;
+
 	public virtual void Awake()
 	{
 		movement = GetComponent<GhostMovement>();
@@ -48,23 +50,17 @@ public class Ghost : MonoBehaviour
 		movement.ResetState();
 
 		frightened.Disable();
-		chase.Disable();
-		scatter.Enable();
+		//chase.enabled = false;
+		//scatter.enabled = false;
 		eaten.Disable();
-		home.Enable();
-
-		//chase.Enable();
-
-		if (home != initialBehavior)
-		{
-			home.Disable();
-		}
+		home.Disable();
 
 		if (initialBehavior != null)
 		{
+			Debug.Log("enabling initial behaviour");
 			initialBehavior.Enable();
 		}
-
+	
 		//if home is the initial behaviour for this ghost, then scatter will also be enabled, because scatter is the next behaviour to transition to
 
 		//the transitions are: home/scatter => chase
@@ -85,11 +81,12 @@ public class Ghost : MonoBehaviour
 			{
 				UnityEngine.Debug.Log("pacman touched ghost!");
 				GameManager.Instance.GhostEaten(this);
+				ghostCollider.isTrigger = true;
 			}
-			/*else
+			else
 			{
 				GameManager.Instance.PacmanEaten();
-			}*/
+			}
 		}
 	}
 

@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Specialized;
-using System.Diagnostics;
 using UnityEngine;
 
 public class GhostScatter : MoveToTarget
 {
 	[SerializeField]
-	private Transform homePosition;
+	public Transform homePosition;
 
 	public void Start()
 	{
@@ -17,6 +16,8 @@ public class GhostScatter : MoveToTarget
 	{
 		base.Enable(duration);
 		ghost.target = homePosition;
+		Debug.Log("SCATTER ENABLE!!");
+		//updateBehaviour = true;
 	}
 
 	private void OnDisable()

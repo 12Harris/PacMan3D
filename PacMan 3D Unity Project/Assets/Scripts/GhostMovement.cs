@@ -20,6 +20,7 @@ public class GhostMovement : MonoBehaviour
     public Vector3 direction { get; set; }
     public Vector3 nextDirection { get; set; }
 	public Vector3 startingPosition { get; private set; }
+	public Vector3 initialPosition { get; private set; }
 
 	private Vector3 exitLocation = Vector3.zero;
 
@@ -31,7 +32,7 @@ public class GhostMovement : MonoBehaviour
 	private void Awake()
     {
         rb = GetComponentInChildren<Rigidbody>();
-		startingPosition = transform.position;
+		startingPosition = initialPosition = transform.position;
 		ghost = GetComponent<Ghost>();
     }
 
@@ -40,11 +41,12 @@ public class GhostMovement : MonoBehaviour
         ResetState();
     }
 
+
     public void ResetState()
     {
         speedMultiplier = 1f;
         direction = nextDirection = initialDirection;
-        transform.position = startingPosition;
+		transform.position = startingPosition;
         //rb.isKinematic = false;
         enabled = true;
     }
@@ -92,6 +94,7 @@ public class GhostMovement : MonoBehaviour
 		}
 		transform.position = new Vector3(posX, transform.position.y, posZ);
 	}
+
 
 	private void FixedUpdate()
     {

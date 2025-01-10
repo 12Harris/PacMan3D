@@ -71,16 +71,22 @@ public class Pacman : MonoBehaviour
 
     public void ResetState()
     {
+        gameObject.SetActive(true);
         enabled = true;
 		boxCollider.enabled = true;
-        movement.ResetState();
-        gameObject.SetActive(true);
+        movement.enabled = true;
+        //movement.ResetState();
+
+        //movement.SetDirection(Vector3.zero);
     }
 
     public void DeathSequence()
     {
+        
+        gameObject.SetActive(false);
         enabled = false;
 		boxCollider.enabled = false;
+        movement.ResetState();
         movement.enabled = false;
     }
 

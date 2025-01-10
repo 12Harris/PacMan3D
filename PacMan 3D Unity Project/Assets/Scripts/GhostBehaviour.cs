@@ -31,7 +31,6 @@ public abstract class GhostBehavior : MonoBehaviour
 	public virtual void Disable()
 	{
 		enabled = false;
-
 		//stop invoke
 		CancelInvoke();
 	}

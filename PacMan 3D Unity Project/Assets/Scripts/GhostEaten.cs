@@ -87,9 +87,9 @@ public class GhostEaten : MoveToTarget
 		}
 
 		GetComponentInChildren<MeshRenderer>().enabled = true;
-		ghost.home.Enable(ghost.home.duration);
 		Disable();
 		ghost.ResetState();
+		ghost.home.Enable();
 
 	}
 }
